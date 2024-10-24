@@ -1,4 +1,4 @@
-package _89
+package cloud189
 
 import (
 	"crypto/rand"
@@ -11,7 +11,12 @@ import (
 	"strings"
 	"time"
 )
+import "regexp"
 
+var (
+	_shareCodePart1 = regexp.MustCompile(`https://cloud.189.cn/t/(\w+)`)
+	_shareCodePart2 = regexp.MustCompile(`https://cloud.189.cn/web/share\?code=(\w+)`)
+)
 var b64map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 var BI_RM = "0123456789abcdefghijklmnopqrstuvwxyz"
 
@@ -65,4 +70,15 @@ func b64tohex(a string) string {
 		d += int2char(c << 2)
 	}
 	return d
+}
+
+func ParseShareCode(url string) string {
+	var matched []string
+	if matched = _shareCodePart1.FindStringSubmatch(url); len(matched) > 1 {
+		return matched[1]
+	}
+	if matched = _shareCodePart2.FindStringSubmatch(url); len(matched) > 1 {
+		return matched[1]
+	}
+	return ""
 }

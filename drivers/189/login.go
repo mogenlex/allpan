@@ -1,4 +1,4 @@
-package _89
+package cloud189
 
 import (
 	"errors"
@@ -138,6 +138,7 @@ func Login(account, password string) (c *req.Client, err error) {
 
 		//v, _ := url.ParseQuery(resp.Header.Get("location"))
 		//accessToken := v.Get("https://h5.cloud.189.cn/index.html?accessToken")
+
 		return client, err
 		//fmt.Println(sessionKey, "login cloud189", "accessToken", accessToken)
 	} else if restCode == -2 {
