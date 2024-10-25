@@ -1,4 +1,4 @@
-module panSDK
+module github.com/mogenleN/panSDK
 
 go 1.23.0
 
