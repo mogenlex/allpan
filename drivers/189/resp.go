@@ -38,7 +38,7 @@ type ListShareDirResp struct {
 			StarLabel  int    `json:"starLabel"`
 		} `json:"fileList"`
 		FileListSize int `json:"fileListSize"`
-		FolderList   [][]struct {
+		FolderList   []struct {
 			CreateDate string `json:"createDate"`
 			FileCata   int    `json:"fileCata"`
 			Icon       struct {
