@@ -4,6 +4,7 @@
     <inspection_tool class="GoDfaErrorMayBeNotNil" enabled="true" level="WARNING" enabled_by_default="true">
       <methods>
         <method importPath="github.com/imroc/req/v3" receiver="*Request" name="Send" />
+        <method importPath="github.com/imroc/req/v3" receiver="*Request" name="Get" />
       </methods>
     </inspection_tool>
   </profile>
