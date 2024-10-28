@@ -1,11 +1,8 @@
 package cloud189
 
-type Cloud189 struct {
-	core core
-}
-
+// NewCloud189 创建一个Client
 func NewCloud189(account, password string) (cloud189 Cloud189, err error) {
-	client, err := Login(account, password)
+	client, err := core{}.login(account, password)
 	if err != nil {
 		return
 	}
@@ -41,8 +38,8 @@ func (c Cloud189) GetListShareDir(req ShareInfoResp) (resp ListShareDirResp, err
 	return
 }
 
-// GetObjectFolderNodes 获取对象文件夹节点
-func (c Cloud189) GetObjectFolderNodes(id string) (resp []GetObjectFolderNodesResp, err error) {
+// GetMyFolderNodes  获取我的文件夹节点
+func (c Cloud189) GetMyFolderNodes(id string) (resp []GetObjectFolderNodesResp, err error) {
 	resp, err = c.core.getObjectFolderNodes(id)
 	return
 }
@@ -53,7 +50,7 @@ func (c Cloud189) CreateFolder(parentFolderId, folderName string) (resp CreateFo
 	return
 }
 
-// SaveCurrentCatalogue 保存当前目录
+// SaveCurrentCatalogue 转存
 func (c Cloud189) SaveCurrentCatalogue(taskInfos []TaskInfosReq, targetFolderId, shareId string) (resp CreateBatchTaskResp, err error) {
 	resp, err = c.core.createBatchTask(taskInfos, targetFolderId, shareId, 3)
 	return

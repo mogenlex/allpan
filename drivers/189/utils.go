@@ -8,6 +8,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	math_rand "math/rand"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -81,4 +82,11 @@ func ParseShareCode(url string) string {
 		return matched[1]
 	}
 	return ""
+}
+func cookiesToString(cookies []*http.Cookie) string {
+	var result string
+	for _, cookie := range cookies {
+		result += cookie.Name + "=" + cookie.Value + ";"
+	}
+	return result
 }

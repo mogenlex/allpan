@@ -11,10 +11,6 @@ const (
 	baseUrl = "https://cloud.189.cn/api"
 )
 
-type invoker struct {
-	client *req.Client
-}
-
 // handle400Error 处理400错误
 func handle400Error(i *invoker, path string, params url.Values, data interface{}) error {
 	return nil

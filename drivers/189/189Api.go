@@ -5,18 +5,22 @@ import (
 	"fmt"
 	"github.com/imroc/req/v3"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/spf13/cast"
 	"net/http"
+	"net/url"
 	"sync"
+	"time"
 )
 
 var (
 	mu sync.Mutex
 )
 
-func Login(account, password string) (c *req.Client, err error) {
+// 登录
+func (c core) login(account, password string) (client *req.Client, err error) {
 	mu.Lock()
 	defer mu.Unlock()
-	client := req.C()
+	//client := req.C()
 	tempUrl := "https://cloud.189.cn/api/portal/loginUrl.action?redirectURL=https%3A%2F%2Fcloud.189.cn%2Fmain.action"
 	var lt, reqId string
 
@@ -150,10 +154,129 @@ func Login(account, password string) (c *req.Client, err error) {
 	}
 }
 
-func cookiesToString(cookies []*http.Cookie) string {
-	var result string
-	for _, cookie := range cookies {
-		result += cookie.Name + "=" + cookie.Value + ";"
+// 获取链接信息
+func (c core) getShareInfoByCodeV2(shareCode string) (resp ShareInfoResp, err error) {
+	path := "/open/share/getShareInfoByCodeV2.action"
+	values := url.Values{}
+	values.Set("shareCode", shareCode)
+	err = c.invoker.Get(path, values, &resp)
+	if err != nil {
+		return
 	}
-	return result
+	return
+}
+
+// 获取带密码的shareId
+func (c core) checkAccessCode(shareCode, accessCode string) (resp checkAccessCode, err error) {
+	path := "/open/share/checkAccessCode.action"
+	values := url.Values{}
+	values.Set("shareCode", shareCode)
+	values.Set("accessCode", accessCode)
+	err = c.invoker.Get(path, values, &resp)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// 获取链接文件信息
+func (c core) listShareDir(req ShareInfoResp) (resp ListShareDirResp, err error) {
+	path := "/open/share/listShareDir.action"
+	values := url.Values{}
+	values.Set("pageNum", "1")
+	values.Set("pageSize", "60")
+	values.Set("fileId", req.FileId)
+	values.Set("shareDirFileId", req.FileId)
+	values.Set("isFolder", "true")
+	values.Set("shareId", cast.ToString(req.ShareId))
+	values.Set("shareMode", cast.ToString(req.ShareMode))
+	values.Set("iconOption", "5")
+	values.Set("orderBy", "lastOpTime")
+	values.Set("descending", "true")
+	values.Set("accessCode", req.AccessCode)
+	err = c.invoker.Get(path, values, &resp)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// 只获取我的目录 目录id
+func (c core) getObjectFolderNodes(id string) (resp []GetObjectFolderNodesResp, err error) {
+	path := "/portal/getObjectFolderNodes.action"
+
+	values := url.Values{}
+	if id == "" {
+		values.Set("id", "-11")
+	} else {
+		values.Set("id", id)
+	}
+	values.Set("orderBy", "1")
+	values.Set("order", "ASC")
+	err = c.invoker.Post(path, values, &resp)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// 创建文件夹
+func (c core) createFolder(parentFolderId, folderName string) (resp CreateFolderResp, err error) {
+	path := "/open/file/createFolder.action"
+	values := url.Values{}
+	values.Set("parentFolderId", parentFolderId)
+	values.Set("folderName", folderName)
+	err = c.invoker.Post(path, values, &resp)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// CreateBatchTask 创建批量任务Id接口
+func (c core) createBatchTask(taskInfos []TaskInfosReq, targetFolderId, shareId string, maxRetries int) (resp CreateBatchTaskResp, err error) {
+	marshal, err := jsoniter.Marshal(taskInfos)
+	fmt.Println(string(marshal), taskInfos)
+	path := "/open/batch/createBatchTask.action"
+	values := url.Values{}
+	values.Set("type", "SHARE_SAVE")
+	values.Set("taskInfos", string(marshal))
+	values.Set("targetFolderId", targetFolderId)
+	values.Set("shareId", shareId)
+	fmt.Println(values)
+	err = c.invoker.Post(path, values, &resp)
+	if err != nil {
+		return
+	}
+	resp, err = c.checkBatchTask(resp.TaskId, maxRetries)
+	return
+}
+
+// checkBatchTask 执行任务
+func (c core) checkBatchTask(taskId string, maxRetries int) (resp CreateBatchTaskResp, err error) {
+	path := "/open/batch/checkBatchTask.action"
+	values := url.Values{}
+	values.Set("taskId", taskId)
+	values.Set("type", "SHARE_SAVE")
+	err = c.invoker.Post(path, values, &resp)
+
+	fmt.Println(resp, taskId)
+	if err != nil {
+		return
+	}
+	switch resp.TaskStatus {
+	case -1:
+		err = errors.New(resp.ResMessage)
+		return
+	case 2:
+		return
+	case 4:
+		return
+	}
+
+	if resp.SubTaskCount != resp.SuccessedCount && maxRetries > 0 {
+		time.Sleep(1 * time.Second)
+		return c.checkBatchTask(taskId, maxRetries-1)
+	}
+	return
 }
