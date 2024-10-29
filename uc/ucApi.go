@@ -36,7 +36,9 @@ func (c core) isCookie(cookie string) (info Info, uc UCloud, err error) {
 	}
 
 }
-func (c core) getShareLink(pwdId, passcode string) (shareInfo shareInfo, err error) {
+
+// 获取分享链接详情
+func (c core) getShare(pwdId, passcode string) (shareInfo shareInfo, err error) {
 	values := url.Values{}
 
 	body := map[string]any{
@@ -51,6 +53,8 @@ func (c core) getShareLink(pwdId, passcode string) (shareInfo shareInfo, err err
 	err = c.invoker.Post("https://pc-api.uc.cn", path, values, body, &shareInfo)
 	return
 }
+
+// 获取分享目录节点
 func (c core) getShareNote(pwdId, stoken, pdirFid string) (info SharePageResp, err error) {
 	values := url.Values{}
 
@@ -68,5 +72,22 @@ func (c core) getShareNote(pwdId, stoken, pdirFid string) (info SharePageResp, e
 	path := "/1/clouddrive/share/sharepage/detail"
 
 	err = c.invoker.Get("https://pc-api.uc.cn", path, values, &info)
+	return
+}
+
+// 只获取文件夹
+func (c core) getFolderNodes(pdirFid string) (resp FolderNodes, err error) {
+	values := url.Values{}
+	values.Set("sys", "win32")
+	values.Set("pdir_fid", pdirFid)
+	values.Set("_page", "1")
+	values.Set("_size", "100")
+	values.Set("_fetch_total", "false")
+	values.Set("_fetch_sub_dirs", "1")
+	values.Set("_sort", "")
+	values.Set("recent_file_size", "0")
+	values.Set("ve", "1.7.2")
+	path := "/1/clouddrive/file/sort"
+	err = c.invoker.Get("https://pc-api.uc.cn", path, values, &resp)
 	return
 }

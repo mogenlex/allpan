@@ -11,10 +11,6 @@ const (
 	baseUrl = "https://pan.quark.cn"
 )
 
-type invoker struct {
-	client *req.Client
-}
-
 func (i *invoker) Get(url, path string, params url.Values, data interface{}) error {
 
 	client := i.client.SetBaseURL(url).DevMode().R()

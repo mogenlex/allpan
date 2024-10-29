@@ -266,3 +266,83 @@ type SharePageResp struct {
 		TGroup        string `json:"_t_group"`
 	} `json:"metadata"`
 }
+type FolderNodes struct {
+	Status    int    `json:"status"`
+	Code      int    `json:"code"`
+	Message   string `json:"message"`
+	Timestamp int    `json:"timestamp"`
+	Data      struct {
+		LastViewList   []interface{} `json:"last_view_list"`
+		RecentFileList []interface{} `json:"recent_file_list"`
+		List           []struct {
+			Fid                 string `json:"fid"`
+			FileName            string `json:"file_name"`
+			PdirFid             string `json:"pdir_fid"`
+			Category            int    `json:"category"`
+			FileType            int    `json:"file_type"`
+			Size                int    `json:"size"`
+			FormatType          string `json:"format_type"`
+			Status              int    `json:"status"`
+			Tags                string `json:"tags,omitempty"`
+			OwnerUcid           string `json:"owner_ucid"`
+			LCreatedAt          int64  `json:"l_created_at,omitempty"`
+			LUpdatedAt          int64  `json:"l_updated_at,omitempty"`
+			Source              string `json:"source"`
+			FileSource          string `json:"file_source"`
+			NameSpace           int    `json:"name_space"`
+			LShotAt             int64  `json:"l_shot_at"`
+			SourceDisplay       string `json:"source_display"`
+			IncludeItems        int    `json:"include_items,omitempty"`
+			SeriesDir           bool   `json:"series_dir"`
+			UploadCameraRootDir bool   `json:"upload_camera_root_dir"`
+			Fps                 int    `json:"fps"`
+			Like                int    `json:"like"`
+			OperatedAt          int64  `json:"operated_at"`
+			RiskType            int    `json:"risk_type"`
+			BackupSign          int    `json:"backup_sign"`
+			FileNameHlStart     int    `json:"file_name_hl_start"`
+			FileNameHlEnd       int    `json:"file_name_hl_end"`
+			Duration            int    `json:"duration"`
+			EventExtra          struct {
+				IsOpen          bool  `json:"is_open,omitempty"`
+				RecentCreatedAt int64 `json:"recent_created_at,omitempty"`
+				ViewAt          int64 `json:"view_at,omitempty"`
+			} `json:"event_extra"`
+			HasSubDirs              bool  `json:"has_sub_dirs,omitempty"`
+			ScrapeStatus            int   `json:"scrape_status"`
+			UpdateViewAt            int64 `json:"update_view_at"`
+			Ban                     bool  `json:"ban"`
+			SaveAsSource            bool  `json:"save_as_source"`
+			BackupSource            bool  `json:"backup_source"`
+			OfflineSource           bool  `json:"offline_source"`
+			OwnerDriveTypeOrDefault int   `json:"owner_drive_type_or_default"`
+			CurVersionOrDefault     int   `json:"cur_version_or_default"`
+			RawNameSpace            int   `json:"raw_name_space"`
+			Dir                     bool  `json:"dir"`
+			File                    bool  `json:"file"`
+			CreatedAt               int64 `json:"created_at"`
+			UpdatedAt               int64 `json:"updated_at"`
+			Extra                   struct {
+			} `json:"_extra"`
+			Thumbnail          string `json:"thumbnail,omitempty"`
+			BigThumbnail       string `json:"big_thumbnail,omitempty"`
+			PreviewUrl         string `json:"preview_url,omitempty"`
+			VideoMaxResolution string `json:"video_max_resolution,omitempty"`
+			VideoWidth         int    `json:"video_width,omitempty"`
+			VideoHeight        int    `json:"video_height,omitempty"`
+			VideoRotate        int    `json:"video_rotate,omitempty"`
+			ObjCategory        string `json:"obj_category,omitempty"`
+			LastPlayInfo       struct {
+				Time int `json:"time"`
+			} `json:"last_play_info,omitempty"`
+			CoverFaceBoundary [][]string `json:"cover_face_boundary,omitempty"`
+		} `json:"list"`
+	} `json:"data"`
+	Metadata struct {
+		Size  int    `json:"_size"`
+		ReqId string `json:"req_id"`
+		Page  int    `json:"_page"`
+		Count int    `json:"_count"`
+		Total int    `json:"_total"`
+	} `json:"metadata"`
+}
