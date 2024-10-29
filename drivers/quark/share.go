@@ -41,3 +41,24 @@ func (c core) shareDetail(shareCode, pdirFid, stoken string) (resp ShareDetailRe
 
 	return
 }
+func (c core) shareSave(fileInfo fileInfoResp, pwdId, stoken, toPdirFid string) (taskInfo TaskInfo, err error) {
+	values := url.Values{}
+	values.Add("__t", GetTimestamp())
+	values.Add("uc_param_str", "")
+
+	body := make(map[string]any)
+	body["fid_list"] = fileInfo.FidList
+	body["fid_token_list"] = fileInfo.FidTokenList
+	body["pdir_fid"] = "0"
+	body["pwd_id"] = pwdId
+	body["scene"] = "link"
+	body["stoken"] = stoken
+	body["to_pdir_fid"] = toPdirFid
+	var resp saveInfoResp
+	err = c.invoker.Post("https://drive-pc.quark.cn", "/1/clouddrive/share/sharepage/save", values, body, &resp)
+	if err != nil {
+		return
+	}
+	taskInfo, err = c.task(resp.Data.TaskId, 3)
+	return
+}

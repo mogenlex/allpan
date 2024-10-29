@@ -197,3 +197,49 @@ type MyNodeResp struct {
 		Total int    `json:"_total"`
 	} `json:"metadata"`
 }
+type fileInfoResp struct {
+	FidList      []string `json:"fid_list"`
+	FidTokenList []string `json:"fid_token_list"`
+}
+type saveInfoResp struct {
+	Status    int    `json:"status"`
+	Code      int    `json:"code"`
+	Message   string `json:"message"`
+	Timestamp int    `json:"timestamp"`
+	Data      struct {
+		TaskId string `json:"task_id"`
+	} `json:"data"`
+	Metadata struct {
+		TqGap int `json:"tq_gap"`
+	} `json:"metadata"`
+}
+
+type TaskInfo struct {
+	Status    int    `json:"status"`
+	Code      int    `json:"code"`
+	Message   string `json:"message"`
+	Timestamp int    `json:"timestamp"`
+	Data      struct {
+		TaskId     string `json:"task_id"`
+		EventId    string `json:"event_id"`
+		TaskType   int    `json:"task_type"`
+		TaskTitle  string `json:"task_title"`
+		Status     int    `json:"status"`
+		CreatedAt  int64  `json:"created_at"`
+		FinishedAt int64  `json:"finished_at"`
+		Share      struct {
+		} `json:"share"`
+		SaveAs struct {
+			SearchExit          bool     `json:"search_exit"`
+			ToPdirFid           string   `json:"to_pdir_fid"`
+			SaveAsSumNum        int      `json:"save_as_sum_num"`
+			IsPack              string   `json:"is_pack"`
+			SaveAsTopFids       []string `json:"save_as_top_fids"`
+			SaveAsSelectTopFids []string `json:"save_as_select_top_fids"`
+			ToPdirName          string   `json:"to_pdir_name"`
+		} `json:"save_as"`
+	} `json:"data"`
+	Metadata struct {
+		TqGap int `json:"tq_gap"`
+	} `json:"metadata"`
+}

@@ -27,7 +27,7 @@ func TestGetShare(t *testing.T) {
 
 func TestNodes(t *testing.T) {
 	c := newLogin()
-	resp, err := c.GetObjectFolderNodes("524853159516486717")
+	resp, err := c.GetMyFolderNodes("524853159516486717")
 	fmt.Println(resp, err)
 }
 

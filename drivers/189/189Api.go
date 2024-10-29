@@ -17,10 +17,10 @@ var (
 )
 
 // 登录
-func (c core) login(account, password string) (client *req.Client, err error) {
+func (c core) login(account, password string) (cc *req.Client, err error) {
 	mu.Lock()
 	defer mu.Unlock()
-	//client := req.C()
+	client := req.C()
 	tempUrl := "https://cloud.189.cn/api/portal/loginUrl.action?redirectURL=https%3A%2F%2Fcloud.189.cn%2Fmain.action"
 	var lt, reqId string
 

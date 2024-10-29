@@ -32,6 +32,10 @@ func (i *invoker) do(client *req.Request, method string, path string, data inter
 
 	if resp.StatusCode == 400 {
 		resMessage := jsoniter.Get(resp.Bytes(), "res_message").ToString()
+		errorCode := jsoniter.Get(resp.Bytes(), "errorCode").ToString()
+		if errorCode == "InvalidSessionKey" {
+
+		}
 		return errors.New(resMessage)
 	}
 

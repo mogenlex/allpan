@@ -21,33 +21,36 @@ type ListShareDirResp struct {
 	ExpireTime int    `json:"expireTime"`
 	ExpireType int    `json:"expireType"`
 	FileListAO struct {
-		Count    int `json:"count"`
-		FileList []struct {
-			CreateDate   string `json:"createDate"`
-			FileCata     int    `json:"fileCata"`
-			FileListSize int    `json:"fileListSize"`
-			Id           int64  `json:"id"`
-			LastOpTime   string `json:"lastOpTime"`
-			Name         string `json:"name"`
-			ParentId     int64  `json:"parentId"`
-			Rev          string `json:"rev"`
-			StarLabel    int    `json:"starLabel"`
-		} `json:"fileList"`
-		FileListSize int `json:"fileListSize"`
-		FolderList   []struct {
-			CreateDate   string `json:"createDate"`
-			FileCata     int    `json:"fileCata"`
-			FileListSize int    `json:"fileListSize"`
-			Id           int64  `json:"id"`
-			LastOpTime   string `json:"lastOpTime"`
-			Name         string `json:"name"`
-			ParentId     int64  `json:"parentId"`
-			Rev          string `json:"rev"`
-			StarLabel    int    `json:"starLabel"`
-		} `json:"folderList"`
+		Count        int          `json:"count"`
+		FileList     []FileList   `json:"fileList"`
+		FileListSize int          `json:"fileListSize"`
+		FolderList   []FolderList `json:"folderList"`
 	} `json:"fileListAO"`
 	LastRev int64 `json:"lastRev"`
 }
+type FileList []struct {
+	CreateDate   string `json:"createDate"`
+	FileCata     int    `json:"fileCata"`
+	FileListSize int    `json:"fileListSize"`
+	Id           int64  `json:"id"`
+	LastOpTime   string `json:"lastOpTime"`
+	Name         string `json:"name"`
+	ParentId     int64  `json:"parentId"`
+	Rev          string `json:"rev"`
+	StarLabel    int    `json:"starLabel"`
+}
+type FolderList struct {
+	CreateDate   string `json:"createDate"`
+	FileCata     int    `json:"fileCata"`
+	FileListSize int    `json:"fileListSize"`
+	Id           int64  `json:"id"`
+	LastOpTime   string `json:"lastOpTime"`
+	Name         string `json:"name"`
+	ParentId     int64  `json:"parentId"`
+	Rev          string `json:"rev"`
+	StarLabel    int    `json:"starLabel"`
+}
+
 type GetObjectFolderNodesResp struct {
 	IsParent string `json:"isParent"`
 	Name     string `json:"name"`

@@ -34,3 +34,14 @@ func TestMyDirNode(t *testing.T) {
 	}
 	fmt.Println(resp)
 }
+func TestSave(t *testing.T) {
+	c := login()
+	infoResp := fileInfoResp{FidList: []string{"9e4cffe246744526bff1a0833b13eecc"},
+		FidTokenList: []string{"4fadd7abbbc4d2927694bf9e367041e0"},
+	}
+	taskInfo, err := c.ShareSave(infoResp,
+		"f485d58d33e6",
+		"vTeS+aD/ihxc6rz7LNsUT4kvOUQVSmFKPj/eAV3XtvY=",
+		"cb170c72265d410dbf0fac77728662c9")
+	fmt.Println(taskInfo.Data.Status, err)
+}
