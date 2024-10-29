@@ -1,12 +1,11 @@
 package cloud189
 
 // NewCloud189 创建一个Client
-func NewCloud189(account, password string) (cloud189 Cloud189, err error) {
-	client, err := core{}.login(account, password)
+func NewCloud189(account, password string) (cloud189 *Cloud189, err error) {
+	cloud189, err = core{}.login(account, password)
 	if err != nil {
 		return
 	}
-	cloud189 = Cloud189{core: core{invoker: invoker{client: client}}}
 	return
 }
 

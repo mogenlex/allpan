@@ -29,12 +29,13 @@ func (i *invoker) Get(path string, params url.Values, data interface{}) error {
 }
 func (i *invoker) do(client *req.Request, method string, path string, data interface{}) (err error) {
 	resp, err := client.Send(method, path)
-
 	if resp.StatusCode == 400 {
 		resMessage := jsoniter.Get(resp.Bytes(), "res_message").ToString()
 		errorCode := jsoniter.Get(resp.Bytes(), "errorCode").ToString()
-		if errorCode == "InvalidSessionKey" {
 
+		if errorCode == "InvalidSessionKey" {
+			i.client = core{}.getAccessTokenBySsKey(i.sessionKey)
+			i.do(client, method, path, &data)
 		}
 		return errors.New(resMessage)
 	}

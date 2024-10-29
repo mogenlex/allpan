@@ -17,7 +17,7 @@ var (
 )
 
 // 登录
-func (c core) login(account, password string) (cc *req.Client, err error) {
+func (c core) login(account, password string) (cloud189 *Cloud189, err error) {
 	mu.Lock()
 	defer mu.Unlock()
 	client := req.C()
@@ -131,19 +131,12 @@ func (c core) login(account, password string) (cc *req.Client, err error) {
 		if err != nil {
 			return
 		}
+		sessionKey := jsoniter.Get(resp.Bytes(), "sessionKey").ToString()
 
-		_ = jsoniter.Get(resp.Bytes(), "sessionKey").ToString()
-		resp, err = client.SetRedirectPolicy(req.MaxRedirectPolicy(5)).R().Get("https://api.cloud.189.cn/open/oauth2/ssoH5.action")
-		if err != nil {
-			return
-		}
+		newClient := c.getAccessTokenBySsKey(sessionKey)
 
-		//fmt.Println(resp.HeaderToString())
-
-		//v, _ := url.ParseQuery(resp.Header.Get("location"))
-		//accessToken := v.Get("https://h5.cloud.189.cn/index.html?accessToken")
-
-		return client, err
+		cloud189 = &Cloud189{core: core{invoker: &invoker{client: newClient, sessionKey: sessionKey}}}
+		return cloud189, err
 		//fmt.Println(sessionKey, "login cloud189", "accessToken", accessToken)
 	} else if restCode == -2 {
 		err = errors.New(jsoniter.Get(loginResp.Bytes(), "msg").ToString())
@@ -279,4 +272,16 @@ func (c core) checkBatchTask(taskId string, maxRetries int) (resp CreateBatchTas
 		return c.checkBatchTask(taskId, maxRetries-1)
 	}
 	return
+}
+func (c core) getAccessTokenBySsKey(sessionKey string) *req.Client {
+	client := req.R()
+	client.SetQueryParam("noCache", Random())
+	client.SetQueryParam("sessionKey", sessionKey)
+	client.SetHeader("appkey", "600100422")
+	resp, err := client.Get("https://cloud.189.cn/api/open/oauth2/getAccessTokenBySsKey.action")
+	if err != nil {
+		return nil
+	}
+	fmt.Println(resp.Cookies())
+	return client.GetClient()
 }

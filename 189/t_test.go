@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func newLogin() Cloud189 {
-	cloud189, err := NewCloud189("", "")
+func newLogin() *Cloud189 {
+	cloud189, err := NewCloud189("15315496321", "mogen123")
 	if err != nil {
 		panic(err)
 	}
