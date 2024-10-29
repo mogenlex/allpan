@@ -64,7 +64,7 @@ type CreateFolderResp struct {
 	CreateDate   string `json:"createDate"`
 	FileCata     int    `json:"fileCata"`
 	FileListSize int    `json:"fileListSize"`
-	Id           string `json:"id"`
+	Id           int64  `json:"id"`
 	LastOpTime   string `json:"lastOpTime"`
 	Name         string `json:"name"`
 	ParentId     int    `json:"parentId"`
