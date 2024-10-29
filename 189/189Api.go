@@ -137,9 +137,8 @@ func (c core) login(account, password string) (cloud189 *Cloud189, err error) {
 			return
 		}
 		fmt.Println("sessionKey", sessionKey)
-		newClient := c.getAccessTokenBySsKey(sessionKey)
 
-		cloud189 = &Cloud189{core: core{invoker: &invoker{client: newClient, sessionKey: sessionKey}}}
+		cloud189 = &Cloud189{core: core{invoker: &invoker{client: client, sessionKey: sessionKey}}}
 		return cloud189, err
 		//fmt.Println(sessionKey, "login cloud189", "accessToken", accessToken)
 	} else if restCode == -2 {
@@ -279,15 +278,3 @@ func (c core) checkBatchTask(taskId string, maxRetries int) (resp CreateBatchTas
 }
 
 // getAccessTokenBySsKey 获取accessTokenb 并自动设置cookie
-func (c core) getAccessTokenBySsKey(sessionKey string) *req.Client {
-	client := req.R()
-	client.SetQueryParam("noCache", Random())
-	client.SetQueryParam("sessionKey", sessionKey)
-	client.SetHeader("appkey", "600100422")
-	resp, err := client.Get("https://cloud.189.cn/api/open/oauth2/getAccessTokenBySsKey.action")
-	if err != nil {
-		return nil
-	}
-	fmt.Println("Cookies", resp.Cookies())
-	return client.GetClient()
-}

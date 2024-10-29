@@ -33,7 +33,7 @@ func (i *invoker) do(client *req.Request, method string, path string, data inter
 		resMessage := jsoniter.Get(resp.Bytes(), "res_message").ToString()
 		errorCode := jsoniter.Get(resp.Bytes(), "errorCode").ToString()
 		if errorCode == "InvalidSessionKey" {
-			i.client = core{}.getAccessTokenBySsKey(i.sessionKey)
+			i.resetClient()
 			i.do(client, method, path, &data)
 		}
 		return errors.New(resMessage)
@@ -50,7 +50,6 @@ func (i *invoker) do(client *req.Request, method string, path string, data inter
 }
 
 func (i *invoker) Post(path string, params url.Values, data interface{}) error {
-
 	client := i.client.SetBaseURL(baseUrl).DevMode().R()
 
 	client.FormData = params
@@ -59,4 +58,26 @@ func (i *invoker) Post(path string, params url.Values, data interface{}) error {
 	client.SetHeader("Content-Type", "application/x-www-form-urlencoded")
 	err := i.do(client, "POST", path, &data)
 	return err
+	return nil
+}
+
+func (i *invoker) resetClient() error {
+	// 设置查询参数
+	values := url.Values{}
+	values.Set("redirectURL", "https://cloud.189.cn/web/redirect.html")
+	values.Set("defaultSaveName", "3")
+	values.Set("defaultSaveNameCheck", "uncheck")
+	values.Set("browserId", "48d76ec45fec4cf27901a171759c289e")
+
+	// 创建客户端
+	client := i.client.R()
+
+	client.QueryParams = values
+
+	_, err := client.Get("https://cloud.189.cn/api/portal/loginUrl.action")
+	if err != nil {
+		return err
+	}
+	i.client = client.GetClient()
+	return nil
 }
