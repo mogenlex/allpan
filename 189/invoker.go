@@ -32,7 +32,6 @@ func (i *invoker) do(client *req.Request, method string, path string, data inter
 	if resp.StatusCode == 400 {
 		resMessage := jsoniter.Get(resp.Bytes(), "res_message").ToString()
 		errorCode := jsoniter.Get(resp.Bytes(), "errorCode").ToString()
-
 		if errorCode == "InvalidSessionKey" {
 			i.client = core{}.getAccessTokenBySsKey(i.sessionKey)
 			i.do(client, method, path, &data)
@@ -52,7 +51,7 @@ func (i *invoker) do(client *req.Request, method string, path string, data inter
 
 func (i *invoker) Post(path string, params url.Values, data interface{}) error {
 
-	client := i.client.SetBaseURL(baseUrl).R()
+	client := i.client.SetBaseURL(baseUrl).DevMode().R()
 
 	client.FormData = params
 	client.SetQueryParam("noCache", Random())

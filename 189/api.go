@@ -54,3 +54,8 @@ func (c Cloud189) SaveCurrentCatalogue(taskInfos []TaskInfosReq, targetFolderId,
 	resp, err = c.core.createBatchTask(taskInfos, targetFolderId, shareId, 3)
 	return
 }
+
+// Sign 签到
+func (c Cloud189) Sign() {
+
+}

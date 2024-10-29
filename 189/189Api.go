@@ -132,7 +132,11 @@ func (c core) login(account, password string) (cloud189 *Cloud189, err error) {
 			return
 		}
 		sessionKey := jsoniter.Get(resp.Bytes(), "sessionKey").ToString()
-
+		if sessionKey == "" {
+			err = errors.New("Failed to get session key")
+			return
+		}
+		fmt.Println("sessionKey", sessionKey)
 		newClient := c.getAccessTokenBySsKey(sessionKey)
 
 		cloud189 = &Cloud189{core: core{invoker: &invoker{client: newClient, sessionKey: sessionKey}}}
@@ -273,6 +277,8 @@ func (c core) checkBatchTask(taskId string, maxRetries int) (resp CreateBatchTas
 	}
 	return
 }
+
+// getAccessTokenBySsKey 获取accessTokenb 并自动设置cookie
 func (c core) getAccessTokenBySsKey(sessionKey string) *req.Client {
 	client := req.R()
 	client.SetQueryParam("noCache", Random())
@@ -282,6 +288,6 @@ func (c core) getAccessTokenBySsKey(sessionKey string) *req.Client {
 	if err != nil {
 		return nil
 	}
-	fmt.Println(resp.Cookies())
+	fmt.Println("Cookies", resp.Cookies())
 	return client.GetClient()
 }
